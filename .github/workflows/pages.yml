@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check the manifest is well-formed XML
-        run: xmllint --noout addin/manifest.xml
+        run: python3 -c "import xml.dom.minidom; xml.dom.minidom.parse('addin/manifest.xml')"
       - name: Check the task pane script parses
         run: node --check addin/taskpane.js
       - uses: actions/configure-pages@v5
