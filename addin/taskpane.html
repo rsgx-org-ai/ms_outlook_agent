@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RSGx Ideas</title>
+  <!-- Office.js must load from Microsoft's CDN (Office add-in rule); it is a no-op in a plain browser. -->
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="taskpane.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="mark" aria-hidden="true"></span>
+      <div>
+        <h1>RSGx Ideas</h1>
+        <p class="tagline">Record an idea or note without leaving Outlook.</p>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <form id="entry-form" novalidate>
+      <fieldset class="type-toggle" id="type-toggle">
+        <legend class="sr-only">Type</legend>
+        <label><input type="radio" name="type" value="idea" checked><span>Idea</span></label>
+        <label><input type="radio" name="type" value="note"><span>Note</span></label>
+      </fieldset>
+
+      <label class="field-label" for="entry-text">What's on your mind?</label>
+      <textarea id="entry-text" rows="5" placeholder="e.g. Could Claude draft the weekly site-safety summary from these emails?" maxlength="4000" required></textarea>
+
+      <div class="context" id="context-row" hidden>
+        <label class="check">
+          <input type="checkbox" id="include-context" checked>
+          <span>Attach the email context</span>
+        </label>
+        <p class="context-line" id="context-line"></p>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn primary" id="save-btn">Save</button>
+        <span class="status" id="status" role="status" aria-live="polite"></span>
+      </div>
+    </form>
+
+    <section class="saved" aria-labelledby="saved-heading">
+      <div class="saved-head">
+        <h2 id="saved-heading">Saved <span class="count" id="count"></span></h2>
+        <a class="link" id="hub-link" href="https://ai.rsgx.com/submit-request" target="_blank" rel="noopener">Open the AI Hub idea funnel ↗</a>
+      </div>
+      <p class="empty" id="empty">Nothing saved yet. Your first idea or note will appear here.</p>
+      <ul class="entries" id="entries"></ul>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span id="storage-mode">Saved to your mailbox settings</span> · <a class="link" href="https://ai.rsgx.com/" target="_blank" rel="noopener">RSGx AI Hub</a>
+  </footer>
+
+  <template id="entry-template">
+    <li class="entry">
+      <div class="entry-meta">
+        <span class="badge" data-role="type"></span>
+        <time data-role="time"></time>
+      </div>
+      <p class="entry-text" data-role="text"></p>
+      <p class="entry-context" data-role="context" hidden></p>
+      <div class="entry-actions">
+        <button type="button" class="btn ghost small" data-action="send">Send to AI Hub ↗</button>
+        <button type="button" class="btn ghost small" data-action="copy">Copy</button>
+        <button type="button" class="btn ghost small danger" data-action="delete">Delete</button>
+      </div>
+    </li>
+  </template>
+
+  <script src="taskpane.js"></script>
+</body>
+</html>

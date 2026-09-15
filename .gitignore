@@ -1,0 +1,5 @@
+node_modules/
+.DS_Store
+Thumbs.db
+# local-dev copy of the manifest pointing at https://localhost (never commit)
+addin/manifest.dev.xml

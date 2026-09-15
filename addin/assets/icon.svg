@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <rect x="4" y="4" width="120" height="120" rx="26" fill="#E01020"/>
+  <!-- lightbulb -->
+  <circle cx="64" cy="52" r="26" fill="#ffffff"/>
+  <path d="M50 70 h28 v12 a6 6 0 0 1 -6 6 h-16 a6 6 0 0 1 -6 -6 z" fill="#ffffff"/>
+  <rect x="54" y="92" width="20" height="8" rx="4" fill="#ffffff"/>
+  <rect x="58" y="103" width="12" height="6" rx="3" fill="#ffffff"/>
+</svg>

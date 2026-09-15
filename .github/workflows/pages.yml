@@ -1,0 +1,42 @@
+# Publishes the static add-in folder (addin/) to GitHub Pages on every push to main.
+# One-off setup a repo admin must do by hand: Settings -> Pages -> Source = "GitHub Actions".
+# Until that is done the deploy job fails with "Pages not enabled"; the build job still runs.
+name: Deploy add-in to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the manifest is well-formed XML
+        run: xmllint --noout addin/manifest.xml
+      - name: Check the task pane script parses
+        run: node --check addin/taskpane.js
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: addin
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
