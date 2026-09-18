@@ -121,10 +121,13 @@ open a debugger, if you have the Office tooling installed.
 
 ## How it relates to the AI Hub
 
-- **Idea funnel.** "Send to AI Hub" copies the entry (with its email context)
-  to the clipboard and opens <https://ai.rsgx.com/submit-request>, where the
-  user pastes it in. The submit page does not read a query string today;
-  adding `?problem=…` prefill there would make this one click. A follow-up.
+- **Idea funnel.** "Send to AI Hub" opens
+  <https://ai.rsgx.com/submit-request> with the entry (and its email context)
+  already in the description box, via `?problem=…&source=outlook`. The hub
+  reads both keys and shows a short "brought in from Outlook" note. The text
+  is still copied to the clipboard as a fallback in case a proxy strips the
+  query string. The user picks a function and submits; nothing is posted
+  automatically.
 - **Links open in the system browser** via `Office.context.ui.openBrowserWindow`
   when Outlook provides it, falling back to `window.open` in a plain browser.
 
@@ -137,9 +140,12 @@ open a debugger, if you have the Office tooling installed.
   roughly 8 long notes or many short ones; when it is full, Save reports an
   error and you need to delete older entries.
 - **No hub API write yet.** Nothing is posted to the funnel automatically; the
-  copy-and-open flow above is the bridge. A signed-in `POST` from the pane
-  would need an auth story for the Outlook webview (SSO token exchange),
-  deliberately out of scope for this prototype.
+  prefilled-link flow above is the bridge, and the user still presses Submit.
+  A signed-in `POST` from the pane would need an auth story for the Outlook
+  webview (SSO token exchange), deliberately out of scope for this prototype.
+- **Long entries are truncated in the link** at 1800 characters, to stay inside
+  the URL length older Outlook webviews and proxies handle. The full text is on
+  the clipboard, and the hub itself accepts up to 4000.
 - **Context is subject + sender only.** No email body, attachments or links
   are captured.
 - **Icons are placeholders** (a red tile with a lightbulb).

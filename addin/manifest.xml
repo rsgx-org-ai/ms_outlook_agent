@@ -17,7 +17,7 @@
   xsi:type="MailApp">
 
   <Id>7ca61970-356c-4a7d-b770-b44fb273fb02</Id>
-  <Version>0.1.0.0</Version>
+  <Version>0.2.0.0</Version>
   <ProviderName>RSGx Central AI Team</ProviderName>
   <DefaultLocale>en-AU</DefaultLocale>
   <DisplayName DefaultValue="RSGx Ideas"/>
