@@ -13,6 +13,11 @@
   // short ones; a save that exceeds it fails and is reported in the status line.
   var MAX_ENTRIES = 200;
   var HUB_FUNNEL_URL = 'https://ai.rsgx.com/submit-request';
+  // The funnel seeds its description box from ?problem= (see the hub's
+  // app/submit-request/page.tsx). Keep this under the hub's own 4000-char cap
+  // and well inside the ~2000-char URL length that older Outlook webviews and
+  // proxies handle reliably.
+  var MAX_SEED_CHARS = 1800;
 
   var $ = function (id) { return document.getElementById(id); };
   var form = $('entry-form');
@@ -180,11 +185,13 @@
     } else if (action === 'copy') {
       copyText(entryClipboardText(entry), function (ok) { setStatus(ok ? 'Copied.' : 'Could not copy — select the text instead.', !ok); });
     } else if (action === 'send') {
-      // The hub's submit page does not read a query string yet, so we copy the
-      // text and open the funnel for the user to paste into (see README).
-      copyText(entryClipboardText(entry), function (ok) {
-        setStatus(ok ? 'Copied — paste it into the funnel form.' : 'Opening the funnel — copy the text manually.', !ok);
-        openExternal(HUB_FUNNEL_URL);
+      // The funnel reads ?problem= and prefills its description box, so the
+      // entry arrives in the form. The text is still copied as a fallback for
+      // the rare case where a proxy strips or truncates the query string.
+      var seed = entryClipboardText(entry);
+      copyText(seed, function () {
+        setStatus('Opening the funnel with your idea filled in.');
+        openExternal(funnelUrlFor(seed));
       });
     }
   }
@@ -192,6 +199,14 @@
   function entryClipboardText(entry) {
     var ctx = contextText(entry.context);
     return entry.text + (ctx ? '\n\n(' + ctx + ')' : '');
+  }
+
+  // /submit-request?problem=…&source=outlook — `source` lets the hub show the
+  // user why the box is already filled in. encodeURIComponent handles the
+  // newlines and parentheses the context line adds.
+  function funnelUrlFor(text) {
+    var seed = String(text || '').slice(0, MAX_SEED_CHARS);
+    return HUB_FUNNEL_URL + '?problem=' + encodeURIComponent(seed) + '&source=outlook';
   }
 
   // Outlook's webview may block window.open; Office.context.ui.openBrowserWindow
